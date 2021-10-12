@@ -16,9 +16,11 @@ USER_PASSWORDS = { "cjardin": "strong password"}
 IMGS_URL = {
             "DEV" : "/static",
             "INT" : "https://cis-444-fall-2021.s3.us-west-2.amazonaws.com/images",
-            "PRD" : "http://d2cbuxq67vowa3.cloudfront.net/images"
+            "PRD" : "http://d2cbuxq67vowa3.cloudfront.net/images",
+	    "A2" : "https://i.imgur.com"
             }
 
+<<<<<<< HEAD
 CUR_ENV = "PRD"
 JWT_SECRET = None
 
@@ -27,6 +29,10 @@ global_db_con = get_db()
 
 with open("secret", "r") as f:
     JWT_SECRET = f.read()
+=======
+CUR_ENV = "A2"
+
+>>>>>>> Assignment 2 commit. Added cute new Josh webpage.
 
 @app.route('/') #endpoint
 def index():
@@ -64,7 +70,7 @@ def auth():
 #Assigment 2
 @app.route('/ss1') #endpoint
 def ss1():
-    return render_template('server_time.html', server_time= str(datetime.datetime.now()) )
+    return render_template('josh.html',img_url = IMGS_URL[CUR_ENV])
 
 @app.route('/getTime') #endpoint
 def get_time():
