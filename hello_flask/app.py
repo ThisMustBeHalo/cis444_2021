@@ -20,7 +20,6 @@ IMGS_URL = {
 	    "A2" : "https://i.imgur.com"
             }
 
-<<<<<<< HEAD
 CUR_ENV = "PRD"
 JWT_SECRET = None
 
@@ -29,10 +28,6 @@ global_db_con = get_db()
 
 with open("secret", "r") as f:
     JWT_SECRET = f.read()
-=======
-CUR_ENV = "A2"
-
->>>>>>> Assignment 2 commit. Added cute new Josh webpage.
 
 @app.route('/') #endpoint
 def index():
