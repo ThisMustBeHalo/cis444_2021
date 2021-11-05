@@ -20,7 +20,7 @@ IMGS_URL = {
 	    "A2" : "https://i.imgur.com"
             }
 
-CUR_ENV = "PRD"
+CUR_ENV = "A2"
 JWT_SECRET = None
 
 global_db_con = get_db()
@@ -98,6 +98,58 @@ def hellodb():
     global_db_con.commit()
     return json_response(status="good")
 
+#a3 code (full stack app)
+user_token = None #represents server side copy of jwt
+
+@app.route('/bookstore')
+def bookstore():
+    return render_template('bookstore.html');
+
+@app.route("/authbookstorelogin",methods=["POST","GET"])
+def authbookstorelogin():
+    print ("Starting login...")
+    username = request.form["username"]
+    password = request.form["password"]
+   
+    cur = global_db_con.cursor()
+    cur.execute(f"select * from users where username = '{username}';")
+    user_record = cur.fetchone()
+    if user_record is not None: #user exists
+     if bcrypt.checkpw(bytes(password, "utf-8"), bytes(user_record[2], "utf-8")) == True: #password is valid
+
+        user_token = jwt.encode({"id":user_record[0], "username":user_record[1]}, JWT_SECRET, algorithm = "HS256")
+        print("Login OK.")
+        return json_response(data = {"jwt": user_token})
+     else: #password is invalid
+        print("Incorrect password.")
+        return json_response(data = {"message": "Incorrect password."})
+    else: #user does not exist
+       print("Incorrect username.")
+       return json_response(data = {"message": "Incorrect username."})
+
+@app.route("/getbooklist",methods=["GET"])
+def getbooklist():
+    print ("Getting booklist...")
+    clientToken = jwt.decode(request.args.get("jwt"), JWT_SECRET, algorithms = ["HS256"])
+    serverToken = jwt.decode(user_token, JWT_SECRET, algorithms = ["HS256"])
+    if not (clientToken == serverToken): #ensure that user is logged in
+     print("Invalid token.")
+     return json_response(data = {"message": "Invalid token."})
+    else:
+     cur = global_db_con.cursor()
+     cur.execute("select count(1) from books;")
+     numRows = cur.fetchone()[0] #number of rows in the table
+     i = 1
+     message = '{"books":['
+     while i <= numRows:
+      cur.execute(f"select from books where id = '{i}';")
+      currentBook = cur.fetchone()
+      message += '{"id":"' + currentBook[0] + '","title":"' + currentBook[1] + '","price":' + str(currentBook[2]) + "}"
+      if not i == numRows:
+       message += ","
+      i += 1
+     print ("Sending booklist...")
+     return json_response(data = json.loads(message)) 
 
 app.run(host='0.0.0.0', port=80)
 
