@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<style>
+	h1 {
+	text-align: center;
+	}
+	h2 {
+	font-size: 20px;
+	}
+	p1 {
+	text-align: center;
+	font-size: 20px;
+	}
+	p2 {
+	font-size: 16px;
+	}
+	</style>
+	<script src = "https://code.jquery.com/jquery-3.6.0.js"
+		integrity = "sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous">
+	</script>
+	
+	</head>
+		<body>
+			<script>
+				var saved_jwt;
+				
+				function attemptLogin(){
+					console.log("logging in...");
+					var user_name = document.getElementById("username").value;
+					var user_pass = document.getElementById("password").value;
+					$.post("/authbookstorelogin", {"username":user_name, "password":user_pass},
+					function(data){
+						if(data.data.jwt){
+							saved_jwt = data.data;
+							alert("Login successful!")
+							var loginform = document.getElementById("login");
+							var books = document.getElementById("booklist");
+							loginform.setAttribute("hidden","hidden");
+							books.removeAttribute("hidden");
+							getBookList();
+						}
+						else{
+							alert(data.data.message)
+						}
+						});
+					return false;
+				}
+
+				function getBookList(){
+					console.log("populating books...");
+					$.get("/getbooks", {"jwt":saved_jwt.jwt},
+					function(books){
+						$('#book1name').html(books.books[0][1]);
+						$('#book1price').html(books.books[0][2]);
+						$('#book2name').html(books.books[1][1]);
+						$('#book2price').html(books.books[1][2]);
+						$('#book3name').html(books.books[2][1]);
+						$('#book3price').html(books.books[2][2]);					
+					});
+				}
+
+				function buyBook(id){
+					console.log("posting purchase...");
+					$.post("/makepurchase",{"book_id":id},
+					function(data){
+					alert(data.data.message);
+					});
+				}
+			</script>
+			<h1>Welcome to the Bookstore!</h1>
+			<div id = "login">
+			<p1>Please log in.</p1><br>
+			<form onsubmit = "return attemptLogin();" method = "post">
+				<label for = "username">Username:</label><br>
+				<input type = "text" id = "username" name = "username"><br>
+				<label for = "password">Password:</label><br>
+				<input type = "password" id = "password" name = "password"><br><br>
+				<input type = "submit" value = "Submit">
+			</form>
+			</div>
+			
+			<div id = "booklist" display: inline-block hidden>
+				<h2 id = book1name></h2>
+				<p2 id = book1price></p2><br>
+				<button id = 1 onclick = "buyBook(1);">Purchase</button>
+
+				<h2 id = book2name></h2>
+				<p2 id = book2price></p2><br>
+				<button id = 2 onclick = "buyBook(2);">Purchase</button>
+
+				<h2 id = book3name></h2>
+				<p2 id = book3price></p2><br>
+				<button id = 3 onclick = "buyBook(3);">Purchase</button>
+			</div>
+		</body>
+
+</html>
