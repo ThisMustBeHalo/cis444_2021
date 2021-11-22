@@ -9,6 +9,7 @@ from tools.logging import logger
 def handle_request():
     logger.debug("Get Books Handle Request")
     cur = global_db_con.cursor()
-    book = cur.execute("select * from books;")
+    cur.execute("select * from books;")
+    book = cur.fetchall()
     return json_response( token = create_token(  g.jwt_data ) , books = book)
 

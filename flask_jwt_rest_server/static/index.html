@@ -32,13 +32,12 @@
 					console.log(data);
 					var books = document.getElementById("booklist");
 					books.removeAttribute("hidden");
-					$('#book1name').html(data.data[0][1]);
-					$('#book1price').html(data.data[0][2]);
-					$('#book2name').html(data.data[1][1]);
-					$('#book2price').html(data.data[1][2]);
-					$('#book3name').html(data.data[2][1]);
-					$('#book3price').html(data.data[2][2]);
-					//$('#buybook').show();
+					$('#book1name').html(data.books[0][1]);
+					$('#book1price').html(data.books[0][2]);
+					$('#book2name').html(data.books[1][1]);
+					$('#book2price').html(data.books[1][2]);
+					$('#book3name').html(data.books[2][1]);
+					$('#book3price').html(data.books[2][2]);
 					},
                                                 function(err){ console.log(err) });
 		}
@@ -49,6 +48,7 @@
                 }
 
 	</script>
+	<h1>Welcome to the bookstore!</h1>
             <div id="login">
 	    	<form >
   			<label for="fname">First name:</label><br>
@@ -58,7 +58,7 @@
   			<input type="submit" value="Signup" onclick="return send_form();">
 		</form>
 	    </div>
-	<div id = "booklist" display: inline-block hidden>
+	<div id = "booklist" display: inline hidden>
 		<h2 id = book1name></h2>
 		<p2 id = book1price></p2><br>
 		<button id = 1 onclick = "buyBook(1);">Purchase</button>
