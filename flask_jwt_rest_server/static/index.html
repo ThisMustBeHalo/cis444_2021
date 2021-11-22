@@ -29,7 +29,15 @@
 			 //make secure call with the jwt
 			secure_get_with_token("/secure_api/get_books", {} , function(data){
 					console.log("got books"); 
-					console.log(data); 
+					console.log(data);
+					var books = document.getElementById("booklist");
+					books.removeAttribute("hidden");
+					$('#book1name').html(data.data[0][1]);
+					$('#book1price').html(data.data[0][2]);
+					$('#book2name').html(data.data[1][1]);
+					$('#book2price').html(data.data[1][2]);
+					$('#book3name').html(data.data[2][1]);
+					$('#book3price').html(data.data[2][2]);
 					$('#buybook').show();
 					},
                                                 function(err){ console.log(err) });
@@ -50,7 +58,20 @@
   			<input type="submit" value="Signup" onclick="return send_form();">
 		</form>
 	    </div>
-	    <button id="buybook" onclick="buy_book(1234)" style="display:none" >Buy Book</button>
+	<div id = "booklist" display: inline-block hidden>
+		<h2 id = book1name></h2>
+		<p2 id = book1price></p2><br>
+		<button id = 1 onclick = "buyBook(1);">Purchase</button>
+
+		<h2 id = book2name></h2>
+		<p2 id = book2price></p2><br>
+		<button id = 2 onclick = "buyBook(2);">Purchase</button>
+
+		<h2 id = book3name></h2>
+		<p2 id = book3price></p2><br>
+		<button id = 3 onclick = "buyBook(3);">Purchase</button>
+	</div>
+	    <!-- <button id="buybook" onclick="buy_book(1234)" style="display:none" >Buy Book</button> -->
     </body>
 </html>
 
